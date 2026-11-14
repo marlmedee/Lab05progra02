@@ -8,6 +8,19 @@ package modelo;
  *
  * @author marlo
  */
-public class EstadoBatalla {
-    
+public enum EstadoBatalla {
+    PREPARACION("Preparación"),
+    ESPERANDO_ACCION("Esperando acción del entrenador"),
+    RESOLVIENDO_RONDA("Resolviendo ronda"),
+    ELEGIR_REEMPLAZO("Eligiendo reemplazo"),
+    VICTORIA("Victoria"),
+    DERROTA("Derrota"),
+    EMPATE("Empate");
+    private final String descripcion;
+    EstadoBatalla(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    public String getDescripcion() {
+        return descripcion;
+    }
 }

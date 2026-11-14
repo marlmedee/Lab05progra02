@@ -8,6 +8,16 @@ package modelo;
  *
  * @author marlo
  */
-public class TipoAccion {
-    
+public enum TipoAccion {
+    ATACAR("Atacar"),
+    HABILIDAD_ESPECIAL("Habilidad especial"),
+    RECUPERAR("Recuperar"),
+    CAMBIAR("Cambiar Pokémon");
+    private final String etiqueta;
+    TipoAccion(String etiqueta) {
+        this.etiqueta = etiqueta;
+    }
+    public String getEtiqueta() {
+        return etiqueta;
+    }
 }
