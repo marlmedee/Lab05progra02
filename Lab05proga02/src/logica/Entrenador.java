@@ -53,4 +53,33 @@ public class Entrenador implements Serializable {
     public List<Pokemon> getEquipo() {
         return equipo;
     }
+    public void agregarPokemon(Pokemon plantilla) {
+        if (plantilla == null) {
+            throw new IllegalArgumentException("Seleccione un Pokémon del catálogo para agregar.");
+        }
+        if (equipo.size() >= MAX_EQUIPO) {
+            throw new IllegalStateException("El equipo ya alcanzó el máximo de " + MAX_EQUIPO + " integrantes.");
+        }
+        long copiasExistentes = equipo.stream()
+                .filter(p -> p.getNombre().equalsIgnoreCase(plantilla.getNombre()))
+                .count();
+        if (copiasExistentes >= MAX_COPIAS_MISMO_POKEMON) {
+            throw new IllegalStateException("Solo puede agregar hasta " + MAX_COPIAS_MISMO_POKEMON + " copias de " + plantilla.getNombre() + ".");
+        }
+        equipo.add(plantilla.clone());
+    }
+
+    public void quitarPokemon(int indice) {
+        if (indice < 0 || indice >= equipo.size()) {
+            throw new IllegalArgumentException("Seleccione un Pokémon de su equipo para quitar.");
+        }
+        equipo.remove(indice);
+    }
+
+    public void reemplazarEquipo(List<Pokemon> nuevoEquipo) {
+        equipo.clear();
+        for (Pokemon p : nuevoEquipo) {
+            equipo.add(p.clone());
+        }
+    }
 }
