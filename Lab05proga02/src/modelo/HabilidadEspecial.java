@@ -8,6 +8,18 @@ package modelo;
  *
  * @author marlo
  */
-public class HabilidadEspecial {
-    
+public class HabilidadEspecial implements Movimiento{
+    private static final long serialVersionUID = 1L;
+    @Override
+    public String obtenerNombre() {
+        return "Habilidad Especial";
+    }
+    @Override
+    public String ejecutar(Pokemon usuario, Pokemon objetivo) {
+        if (usuario.getUsosHabilidad() <= 0) {
+            throw new IllegalStateException("No quedan usos de habilidad especial.");
+        }
+        usuario.consumirUsoHabilidad();
+        return usuario.ejecutarHabilidadEspecial(objetivo);
+    }
 }

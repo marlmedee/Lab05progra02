@@ -8,6 +8,8 @@ package modelo;
  *
  * @author marlo
  */
-public class Movimiento {
-    
+import java.io.Serializable;
+public interface Movimiento extends Serializable{
+    String obtenerNombre();
+    String ejecutar(Pokemon usuario, Pokemon objetivo);
 }
