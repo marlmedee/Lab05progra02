@@ -179,3 +179,4 @@ public class PanelEquipo extends JPanel{
             }
         }
     }
+}
