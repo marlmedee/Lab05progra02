@@ -1,257 +1,278 @@
 
 package vista;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
+import java.awt.Image;
+import java.awt.Cursor;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import logica.Entrenador;
 
 public class PanelInicio extends JPanel {
 
     private final VentanaPrincipal ventana;
+    private JTextField campoNombre;
 
-    private JTextField txtNombre;
-    private JLabel lblImagen;
-
-    private final Color AZUL = new Color(45, 115, 190);
-    private final Color ROJO = new Color(225, 65, 65);
-    private final Color AMARILLO = new Color(255, 205, 55);
-    private final Color FONDO = new Color(235, 245, 255);
+    private final Color azulOscuro = new Color(35, 55, 105);
+    private final Color azulFondo = new Color(220, 233, 255);
+    private final Color amarillo = new Color(255, 205, 55);
+    private final Color blanco = Color.WHITE;
 
     public PanelInicio(VentanaPrincipal ventana) {
-
         this.ventana = ventana;
 
         setLayout(new BorderLayout());
-        setBackground(FONDO);
-        setBorder(new EmptyBorder(25, 35, 25, 35));
+        setBackground(azulFondo);
+        setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
-        crearPantalla();
+        crearInterfaz();
     }
 
-    private void crearPantalla() {
-        JPanel panelTitulo = new JPanel();
-        panelTitulo.setOpaque(false);
-        panelTitulo.setLayout(
-            new BoxLayout(panelTitulo, BoxLayout.Y_AXIS)
+    private void crearInterfaz() {
+
+        JLabel titulo = new JLabel(
+                "BATALLAS POKÉMON",
+                SwingConstants.CENTER
         );
 
-        JLabel lblTitulo = new JLabel("BATALLAS POKÉMON");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 38));
-        lblTitulo.setForeground(AZUL);
-        lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
+        titulo.setFont(new Font("Arial", Font.BOLD, 38));
+        titulo.setForeground(azulOscuro);
 
-        JLabel lblSubtitulo = new JLabel(
-            "¡Prepara tu equipo y conviértete en campeón!"
-        );
-        lblSubtitulo.setFont(new Font("Arial", Font.PLAIN, 17));
-        lblSubtitulo.setForeground(new Color(75, 85, 100));
-        lblSubtitulo.setAlignmentX(CENTER_ALIGNMENT);
-
-        panelTitulo.add(lblTitulo);
-        panelTitulo.add(Box.createVerticalStrut(8));
-        panelTitulo.add(lblSubtitulo);
-
-        add(panelTitulo, BorderLayout.NORTH);
-
-        JPanel panelCentral = new JPanel();
-        panelCentral.setOpaque(false);
-        panelCentral.setLayout(
-            new BoxLayout(panelCentral, BoxLayout.Y_AXIS)
+        JLabel subtitulo = new JLabel(
+                "¡Tu aventura comienza aquí!",
+                SwingConstants.CENTER
         );
 
-        lblImagen = new JLabel();
-        lblImagen.setAlignmentX(CENTER_ALIGNMENT);
-        lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+        subtitulo.setFont(new Font("Arial", Font.PLAIN, 18));
+        subtitulo.setForeground(azulOscuro);
 
-        cargarImagen();
+        JPanel encabezado = new JPanel();
+        encabezado.setOpaque(false);
+        encabezado.setLayout(new BoxLayout(encabezado, BoxLayout.Y_AXIS));
 
-        JLabel lblBienvenida = new JLabel("¡Bienvenido, entrenador!");
-        lblBienvenida.setFont(new Font("Arial", Font.BOLD, 25));
-        lblBienvenida.setForeground(ROJO);
-        lblBienvenida.setAlignmentX(CENTER_ALIGNMENT);
+        titulo.setAlignmentX(CENTER_ALIGNMENT);
+        subtitulo.setAlignmentX(CENTER_ALIGNMENT);
 
-        JLabel lblInstruccion = new JLabel(
-            "Escribe tu nombre para comenzar tu aventura."
-        );
-        lblInstruccion.setFont(new Font("Arial", Font.PLAIN, 16));
-        lblInstruccion.setAlignmentX(CENTER_ALIGNMENT);
+        encabezado.add(titulo);
+        encabezado.add(Box.createVerticalStrut(8));
+        encabezado.add(subtitulo);
 
-        txtNombre = new JTextField();
-        txtNombre.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtNombre.setMaximumSize(new Dimension(330, 42));
-        txtNombre.setHorizontalAlignment(JTextField.CENTER);
-        txtNombre.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(AZUL, 2),
-                BorderFactory.createEmptyBorder(5, 10, 5, 10)
-            )
-        );
+        add(encabezado, BorderLayout.NORTH);
 
-        JButton btnContinuar = crearBoton(
-            "CONTINUAR",
-            ROJO,
-            Color.WHITE
+        JPanel tarjeta = new JPanel();
+        tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
+        tarjeta.setBackground(blanco);
+        tarjeta.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(190, 205, 235), 2
+                        ),
+                        BorderFactory.createEmptyBorder(20, 45, 20, 45)
+                )
         );
 
-        JButton btnInstrucciones = crearBoton(
-            "INSTRUCCIONES",
-            AZUL,
-            Color.WHITE
-        );
+        ImageIcon icono = cargarImagen("/imagenes/pikachu.png");
 
-        JButton btnSalir = crearBoton(
-            "SALIR",
-            new Color(100, 110, 125),
-            Color.WHITE
-        );
+        JLabel imagen = new JLabel();
+        imagen.setHorizontalAlignment(SwingConstants.CENTER);
+        imagen.setAlignmentX(CENTER_ALIGNMENT);
+        imagen.setPreferredSize(new Dimension(210, 190));
+        imagen.setMaximumSize(new Dimension(210, 190));
 
-        btnContinuar.addActionListener((ActionEvent e) -> {
-            continuar();
-        });
-
-        txtNombre.addActionListener((ActionEvent e) -> {
-            continuar();
-        });
-
-        btnInstrucciones.addActionListener((ActionEvent e) -> {
-            mostrarInstrucciones();
-        });
-
-        btnSalir.addActionListener((ActionEvent e) -> {
-            salir();
-        });
-
-        panelCentral.add(Box.createVerticalStrut(15));
-        panelCentral.add(lblImagen);
-        panelCentral.add(Box.createVerticalStrut(10));
-        panelCentral.add(lblBienvenida);
-        panelCentral.add(Box.createVerticalStrut(8));
-        panelCentral.add(lblInstruccion);
-        panelCentral.add(Box.createVerticalStrut(15));
-        panelCentral.add(txtNombre);
-        panelCentral.add(Box.createVerticalStrut(20));
-        panelCentral.add(btnContinuar);
-        panelCentral.add(Box.createVerticalStrut(10));
-        panelCentral.add(btnInstrucciones);
-        panelCentral.add(Box.createVerticalStrut(10));
-        panelCentral.add(btnSalir);
-
-        add(panelCentral, BorderLayout.CENTER);
-
-        JLabel lblPie = new JLabel(
-            "POKÉMON BATTLE GAME | PROGRAMACIÓN II",
-            SwingConstants.CENTER
-        );
-
-        lblPie.setFont(new Font("Arial", Font.BOLD, 11));
-        lblPie.setForeground(new Color(110, 120, 135));
-
-        add(lblPie, BorderLayout.SOUTH);
-    }
-
-    private void cargarImagen() {
-
-        java.net.URL recurso =
-            getClass().getResource("/imagenes/pikachu.png");
-
-        if (recurso != null) {
-
-            ImageIcon imagen = new ImageIcon(recurso);
-
-            java.awt.Image imagenEscalada =
-                imagen.getImage().getScaledInstance(
-                    170,
-                    170,
-                    java.awt.Image.SCALE_SMOOTH
-                );
-
-            lblImagen.setIcon(new ImageIcon(imagenEscalada));
-
+        if (icono != null) {
+            imagen.setIcon(icono);
         } else {
-
-            lblImagen.setText("¡Tu aventura Pokémon comienza aquí!");
-            lblImagen.setFont(new Font("Arial", Font.BOLD, 14));
-            lblImagen.setForeground(AZUL);
+            imagen.setText("⚡");
+            imagen.setFont(new Font("Arial", Font.PLAIN, 100));
+            imagen.setForeground(amarillo);
         }
+
+        JLabel bienvenida = new JLabel(
+                "¡Bienvenido, entrenador!",
+                SwingConstants.CENTER
+        );
+
+        bienvenida.setFont(new Font("Arial", Font.BOLD, 23));
+        bienvenida.setForeground(azulOscuro);
+        bienvenida.setAlignmentX(CENTER_ALIGNMENT);
+
+        JLabel indicacion = new JLabel(
+                "¿Cómo te llamas?",
+                SwingConstants.CENTER
+        );
+
+        indicacion.setFont(new Font("Arial", Font.PLAIN, 17));
+        indicacion.setForeground(new Color(90, 100, 125));
+        indicacion.setAlignmentX(CENTER_ALIGNMENT);
+
+        campoNombre = new JTextField(20);
+        campoNombre.setFont(new Font("Arial", Font.PLAIN, 18));
+        campoNombre.setHorizontalAlignment(JTextField.CENTER);
+        campoNombre.setPreferredSize(new Dimension(320, 45));
+        campoNombre.setMaximumSize(new Dimension(320, 45));
+        campoNombre.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(azulOscuro, 2),
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                )
+        );
+
+        campoNombre.addActionListener(e -> continuar());
+
+        JButton botonContinuar = crearBoton(
+                "COMENZAR AVENTURA",
+                amarillo,
+                azulOscuro
+        );
+
+        botonContinuar.addActionListener(e -> continuar());
+
+        JButton botonInstrucciones = crearBoton(
+                "INSTRUCCIONES",
+                new Color(230, 238, 255),
+                azulOscuro
+        );
+
+        botonInstrucciones.addActionListener(
+                e -> mostrarInstrucciones()
+        );
+
+        JButton botonSalir = crearBoton(
+                "SALIR DEL JUEGO",
+                new Color(220, 80, 80),
+                blanco
+        );
+
+        botonSalir.addActionListener(e -> salir());
+
+        tarjeta.add(imagen);
+        tarjeta.add(Box.createVerticalStrut(5));
+        tarjeta.add(bienvenida);
+        tarjeta.add(Box.createVerticalStrut(15));
+        tarjeta.add(indicacion);
+        tarjeta.add(Box.createVerticalStrut(10));
+        tarjeta.add(campoNombre);
+        tarjeta.add(Box.createVerticalStrut(20));
+        tarjeta.add(botonContinuar);
+        tarjeta.add(Box.createVerticalStrut(10));
+        tarjeta.add(botonInstrucciones);
+        tarjeta.add(Box.createVerticalStrut(8));
+        tarjeta.add(botonSalir);
+
+        JPanel contenedorTarjeta = new JPanel();
+        contenedorTarjeta.setOpaque(false);
+        contenedorTarjeta.add(tarjeta);
+
+        add(contenedorTarjeta, BorderLayout.CENTER);
+    }
+
+    private ImageIcon cargarImagen(String ruta) {
+
+        java.net.URL recurso = getClass().getResource(ruta);
+
+        if (recurso == null) {
+            return null;
+        }
+
+        ImageIcon original = new ImageIcon(recurso);
+
+        Image imagen = original.getImage().getScaledInstance(
+                180,
+                180,
+                Image.SCALE_SMOOTH
+        );
+
+        return new ImageIcon(imagen);
     }
 
     private JButton crearBoton(
-        String texto,
-        Color fondo,
-        Color letra
+            String texto,
+            Color fondo,
+            Color letra
     ) {
 
         JButton boton = new JButton(texto);
 
-        boton.setFont(new Font("Arial", Font.BOLD, 15));
+        boton.setFont(new Font("Arial", Font.BOLD, 14));
         boton.setForeground(letra);
         boton.setBackground(fondo);
-        boton.setFocusPainted(false);
-        boton.setBorderPainted(false);
-        boton.setCursor(
-            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)
-        );
-
-        boton.setPreferredSize(new Dimension(240, 43));
-        boton.setMaximumSize(new Dimension(240, 43));
+        boton.setPreferredSize(new Dimension(280, 42));
+        boton.setMaximumSize(new Dimension(280, 42));
         boton.setAlignmentX(CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setBorder(
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        );
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return boton;
     }
 
     private void continuar() {
 
-        String nombre = txtNombre.getText();
+        try {
 
-        ventana.continuarConNombre(nombre);
+            String nombre = Entrenador.validarYFormatearNombre(
+                    campoNombre.getText()
+            );
+
+            ventana.continuarConNombre(nombre);
+
+        } catch (IllegalArgumentException ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    ex.getMessage(),
+                    "Nombre no válido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            campoNombre.requestFocus();
+        }
     }
 
     private void mostrarInstrucciones() {
 
         String instrucciones =
-            "¡BIENVENIDO A BATALLAS POKÉMON!\n\n"
-            + "1. Escribe el nombre de tu entrenador.\n"
-            + "2. Selecciona entre 1 y 6 Pokémon.\n"
-            + "3. Enfrenta al equipo rival por turnos.\n"
-            + "4. Utiliza ataques, habilidades y recuperación.\n"
-            + "5. ¡Derrota al equipo rival para ganar!\n\n"
-            + "¡Buena suerte, entrenador!";
+                "¡Bienvenido a Batallas Pokémon!\n\n"
+                + "1. Ingresa el nombre de tu entrenador.\n"
+                + "2. Forma tu equipo de Pokémon.\n"
+                + "3. Enfréntate a un rival controlado por la CPU.\n"
+                + "4. Utiliza ataques, habilidades y recuperación.\n"
+                + "5. Derrota al equipo rival para ganar.\n\n"
+                + "¡Que comience la aventura!";
 
         JOptionPane.showMessageDialog(
-            this,
-            instrucciones,
-            "Reglas del juego",
-            JOptionPane.INFORMATION_MESSAGE
+                this,
+                instrucciones,
+                "Instrucciones",
+                JOptionPane.INFORMATION_MESSAGE
         );
     }
 
     private void salir() {
 
         int respuesta = JOptionPane.showConfirmDialog(
-            this,
-            "¿Seguro que deseas salir del juego?",
-            "Salir",
-            JOptionPane.YES_NO_OPTION
+                this,
+                "¿Seguro que deseas salir del juego?",
+                "Salir",
+                JOptionPane.YES_NO_OPTION
         );
 
         if (respuesta == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
-}   
+}
 

@@ -4,95 +4,160 @@
  * and open the template in the editor.
  */
 package vista;
+
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import logica.Entrenador;
 
-/**
- *
- * @author gigiw
- */
 public class VentanaPrincipal extends JFrame {
 
     private final CardLayout cardLayout;
     private final JPanel contenedor;
-
     private Entrenador entrenador;
 
-    public static final String CARD_INICIO = "INICIO";
-    public static final String CARD_EQUIPO = "EQUIPO";
-    public static final String CARD_BATALLA = "BATALLA";
-    public static final String CARD_RESULTADO = "RESULTADO";
+    private PanelInicio panelInicio;
+    private PanelResultado panelResultado;
+    private JPanel panelEquipo;
+    private JPanel panelBatalla;
+
+    public static final String INICIO = "INICIO";
+    public static final String EQUIPO = "EQUIPO";
+    public static final String BATALLA = "BATALLA";
+    public static final String RESULTADO = "RESULTADO";
 
     public VentanaPrincipal() {
         setTitle("Batallas Pokémon");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);
         setMinimumSize(new Dimension(850, 550));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);
 
         cardLayout = new CardLayout();
         contenedor = new JPanel(cardLayout);
+        contenedor.setBackground(new Color(245, 247, 255));
 
-        PanelInicio panelInicio = new PanelInicio(this);
+        panelInicio = new PanelInicio(this);
+        panelResultado = new PanelResultado(this);
 
-        contenedor.add(panelInicio, CARD_INICIO);
+        panelEquipo = crearPanelTemporal("Pantalla de selección de equipo");
+        panelBatalla = crearPanelTemporal("Pantalla de batalla");
 
-        contenedor.add(new JPanel(), CARD_EQUIPO);
-        contenedor.add(new JPanel(), CARD_BATALLA);
-        contenedor.add(new JPanel(), CARD_RESULTADO);
+        contenedor.add(panelInicio, INICIO);
+        contenedor.add(panelEquipo, EQUIPO);
+        contenedor.add(panelBatalla, BATALLA);
+        contenedor.add(panelResultado, RESULTADO);
 
-        add(contenedor);
+        add(contenedor, BorderLayout.CENTER);
 
-        mostrarInicio();
+        mostrarPantalla(INICIO);
     }
 
-    public void mostrarInicio() {
-        cardLayout.show(contenedor, CARD_INICIO);
+    private JPanel crearPanelTemporal(String mensaje) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new Color(245, 247, 255));
+
+        javax.swing.JLabel etiqueta = new javax.swing.JLabel(
+                mensaje,
+                javax.swing.SwingConstants.CENTER
+        );
+
+        etiqueta.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 26));
+        etiqueta.setForeground(new Color(45, 65, 110));
+
+        panel.add(etiqueta, BorderLayout.CENTER);
+
+        return panel;
     }
 
-    public void mostrarEquipo() {
-        cardLayout.show(contenedor, CARD_EQUIPO);
-    }
-
-    public void mostrarBatalla() {
-        cardLayout.show(contenedor, CARD_BATALLA);
-    }
-
-    public void mostrarResultado() {
-        cardLayout.show(contenedor, CARD_RESULTADO);
+    public void mostrarPantalla(String pantalla) {
+        cardLayout.show(contenedor, pantalla);
     }
 
     public void continuarConNombre(String nombre) {
+        entrenador = new Entrenador();
+        entrenador.setNombre(nombre);
 
-        try {
-            entrenador = new Entrenador();
-            entrenador.setNombre(nombre);
+        mostrarPantalla(EQUIPO);
+    }
 
-            mostrarEquipo();
+    public void mostrarInicio() {
+        mostrarPantalla(INICIO);
+    }
 
-        } catch (IllegalArgumentException e) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this,
-                e.getMessage(),
-                "Nombre no válido",
-                javax.swing.JOptionPane.WARNING_MESSAGE
-            );
+    public void mostrarEquipo() {
+        mostrarPantalla(EQUIPO);
+    }
+
+    public void mostrarBatalla() {
+        mostrarPantalla(BATALLA);
+    }
+
+    public void mostrarResultado(
+            String resultado,
+            int rondas,
+            int debilitadosJugador,
+            int debilitadosRival,
+            int pokemonEnPieJugador,
+            int pokemonEnPieRival
+    ) {
+        panelResultado.configurarResultado(
+                entrenador != null ? entrenador.getNombre() : "Entrenador",
+                resultado,
+                rondas,
+                debilitadosJugador,
+                debilitadosRival,
+                pokemonEnPieJugador,
+                pokemonEnPieRival
+        );
+
+        mostrarPantalla(RESULTADO);
+    }
+
+    public void establecerPanelEquipo(JPanel nuevoPanel) {
+        if (nuevoPanel == null) {
+            return;
         }
+
+        contenedor.remove(panelEquipo);
+        panelEquipo = nuevoPanel;
+        contenedor.add(panelEquipo, EQUIPO);
+
+        contenedor.revalidate();
+        contenedor.repaint();
+    }
+
+    public void establecerPanelBatalla(JPanel nuevoPanel) {
+        if (nuevoPanel == null) {
+            return;
+        }
+
+        contenedor.remove(panelBatalla);
+        panelBatalla = nuevoPanel;
+        contenedor.add(panelBatalla, BATALLA);
+
+        contenedor.revalidate();
+        contenedor.repaint();
     }
 
     public Entrenador getEntrenador() {
         return entrenador;
     }
 
+    public PanelResultado getPanelResultado() {
+        return panelResultado;
+    }
+    
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             VentanaPrincipal ventana = new VentanaPrincipal();
             ventana.setVisible(true);
         });
     }
-} 
+}
 
