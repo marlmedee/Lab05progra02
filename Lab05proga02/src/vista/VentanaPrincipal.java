@@ -5,57 +5,59 @@
  */
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import logica.Entrenador;
+import logica.MotorBatalla;
+import logica.SerializadorEquipo;
+import modelo.CatalogoPokemon;
 
 public class VentanaPrincipal extends JFrame {
+    private static final String CARD_INICIO = "INICIO";
+    private static final String CARD_EQUIPO = "EQUIPO";
+    private static final String CARD_BATALLA = "BATALLA";
+    private static final String CARD_RESULTADO = "RESULTADO";
 
     private final CardLayout cardLayout;
     private final JPanel contenedor;
-    private Entrenador entrenador;
 
-    private PanelInicio panelInicio;
-    private PanelResultado panelResultado;
-    private JPanel panelEquipo;
-    private JPanel panelBatalla;
+    private final Entrenador entrenador;
+    private final CatalogoPokemon catalogo;
+    private final SerializadorEquipo serializador;
+    private MotorBatalla motorBatalla;
 
-    public static final String INICIO = "INICIO";
-    public static final String EQUIPO = "EQUIPO";
-    public static final String BATALLA = "BATALLA";
-    public static final String RESULTADO = "RESULTADO";
+    private final PanelInicio panelInicio;
+    private final PanelEquipo panelEquipo;
+    private final PanelBatalla panelBatalla;
+    private final PanelResultado panelResultado;
+    
+    
 
     public VentanaPrincipal() {
-        setTitle("Batallas Pokémon");
-        setSize(1000, 650);
-        setMinimumSize(new Dimension(850, 550));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super("Batallas Pokémon");
+        this.entrenador = new Entrenador();
+        this.catalogo = new CatalogoPokemon();
+        this.serializador = new SerializadorEquipo();
+
+        this.cardLayout = new CardLayout();
+        this.contenedor = new JPanel(cardLayout);
+
+        this.panelInicio = new PanelInicio(this);
+        this.panelEquipo = new PanelEquipo(this);
+        this.panelBatalla = new PanelBatalla(this);
+        this.panelResultado = new PanelResultado(this);
+
+        contenedor.add(panelInicio, CARD_INICIO);
+        contenedor.add(panelEquipo, CARD_EQUIPO);
+        contenedor.add(panelBatalla, CARD_BATALLA);
+        contenedor.add(panelResultado, CARD_RESULTADO);
+
+        add(contenedor);
+        setSize(860, 560);
         setLocationRelativeTo(null);
-        setResizable(false);
-
-        cardLayout = new CardLayout();
-        contenedor = new JPanel(cardLayout);
-        contenedor.setBackground(new Color(245, 247, 255));
-
-        panelInicio = new PanelInicio(this);
-        panelResultado = new PanelResultado(this);
-
-        panelEquipo = crearPanelTemporal("Pantalla de selección de equipo");
-        panelBatalla = crearPanelTemporal("Pantalla de batalla");
-
-        contenedor.add(panelInicio, INICIO);
-        contenedor.add(panelEquipo, EQUIPO);
-        contenedor.add(panelBatalla, BATALLA);
-        contenedor.add(panelResultado, RESULTADO);
-
-        add(contenedor, BorderLayout.CENTER);
-
-        mostrarPantalla(INICIO);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private JPanel crearPanelTemporal(String mensaje) {
@@ -152,7 +154,29 @@ public class VentanaPrincipal extends JFrame {
     public PanelResultado getPanelResultado() {
         return panelResultado;
     }
-    
+    public void iniciarBatalla() {
+    this.motorBatalla = new MotorBatalla(entrenador, catalogo.getPokemonDisponibles());
+        panelBatalla.actualizarInterfaz();
+        cardLayout.show(contenedor, CARD_BATALLA);
+}
+
+    public void irAResultado() {
+        panelResultado.cargarResultado();
+        cardLayout.show(contenedor, CARD_RESULTADO);
+    }
+
+    public Entrenador getEntrenador(){
+        return entrenador; 
+    }
+    public CatalogoPokemon getCatalogo(){
+        return catalogo;
+    }
+    public SerializadorEquipo getSerializador(){
+        return serializador;
+    }
+    public MotorBatalla getMotorBatalla(){
+        return motorBatalla;
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             VentanaPrincipal ventana = new VentanaPrincipal();
