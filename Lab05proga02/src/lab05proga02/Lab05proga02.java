@@ -10,11 +10,7 @@ package lab05proga02;
  */
 public class Lab05proga02 {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void hola () {
     }
     
 }
