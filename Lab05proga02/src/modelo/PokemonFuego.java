@@ -9,5 +9,5 @@ package modelo;
  * @author marlo
  */
 public class PokemonFuego {
-    
+  
 }
